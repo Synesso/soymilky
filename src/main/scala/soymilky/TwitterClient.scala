@@ -1,6 +1,6 @@
 package soymilky
 
-import twitter4j.{FilterQuery, TwitterStreamFactory}
+import twitter4j.TwitterStreamFactory
 
 class TwitterClient(handle: String) extends TwitterConfig(handle) with StatusStream {
 

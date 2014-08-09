@@ -1,0 +1,17 @@
+rally {
+    user = "rally username"
+    pass = "rally password"
+    teams = ["list", "of", "teams", "to", "check"]
+}
+twitter {
+    your_handle {
+        api {
+            key = "your api key"
+            secret = "your api secret"
+        }
+        access {
+            token = "your access token"
+            secret = "your access secret"
+        }
+    }
+}

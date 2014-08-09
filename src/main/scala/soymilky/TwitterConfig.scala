@@ -8,10 +8,10 @@ class TwitterConfig(handle: String) {
   private val conf = ConfigFactory.parseResources("account.config")
 
   val config = new ConfigurationBuilder()
-    .setOAuthConsumerKey(conf.getString(s"account.$handle.api.key"))
-    .setOAuthConsumerSecret(conf.getString(s"account.$handle.api.secret"))
-    .setOAuthAccessToken(conf.getString(s"account.$handle.access.token"))
-    .setOAuthAccessTokenSecret(conf.getString(s"account.$handle.access.secret"))
+    .setOAuthConsumerKey(conf.getString(s"twitter.$handle.api.key"))
+    .setOAuthConsumerSecret(conf.getString(s"twitter.$handle.api.secret"))
+    .setOAuthAccessToken(conf.getString(s"twitter.$handle.access.token"))
+    .setOAuthAccessTokenSecret(conf.getString(s"twitter.$handle.access.secret"))
     .build
 
 }
