@@ -13,16 +13,16 @@ class RallyClient {
 
   implicit val formats = DefaultFormats
 
-  def acceptedBy(team: String): Future[Seq[Story]] = {
+  def acceptedBy(team: String): Future[Set[Story]] = {
     val (user, pass) = (conf.getString("rally.user"), conf.getString("rally.pass"))
-    val byRecordType: Seq[Future[Seq[Story]]] = Seq(story, defect).map{recordType =>
+    val byRecordType: Seq[Future[Set[Story]]] = Seq(story, defect).map{recordType =>
       val svc = url(urlFor(recordType, team)).as(user, pass)
       val json: Future[JValue] = Http(svc OK as.String).map(parse(_)).map{ _ \ "QueryResult" \ "Results" }
       json.map(_.children.map{result: JValue =>
         result.extract[Story]
-      })
+      }.toSet)
     }
-    Future.sequence(byRecordType).map(_.flatten)
+    Future.sequence(byRecordType).map(_.flatten).map(_.toSet)
   }
 
   private def urlFor(recordType: String, team: String, date: Date = new Date) = {
