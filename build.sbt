@@ -9,6 +9,7 @@ libraryDependencies ++= Seq(
   "net.databinder.dispatch" %% "dispatch-core" % "0.11.1",
   "org.json4s" %% "json4s-jackson" % "3.2.10",
   "org.scala-lang" %% "scala-pickling" % "0.8.0",
+  "org.slf4j" % "slf4j-nop" % "1.7.7",
   "org.twitter4j" % "twitter4j-stream" % "3.0.3"
 )
 

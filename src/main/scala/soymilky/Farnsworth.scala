@@ -2,6 +2,7 @@ package soymilky
 
 import soymilky.Config.conf
 import soymilky.StoryStore._
+import soymilky.Twitter._
 import soymilky.rally._
 
 import scala.collection.JavaConversions._
@@ -33,8 +34,13 @@ object Farnsworth extends App {
     fromBefore <- storiesFromLastRun
   } yield all.map{ case (k, v) => (k, v -- fromBefore.getOrElse(k, Set.empty))}
 
-  allStories.onSuccess{case s => store(s)}
-  newStories.onSuccess{case p => println(s"New: $p")}
+  for {
+    all <- allStories
+    fresh <- newStories
+  } {
+    store(all)
+    fresh.foreach((tweet _).tupled)
+  }
 
   Await.ready(newStories, 1 minute)
 
