@@ -29,8 +29,8 @@ class RallyClient {
     val day = new SimpleDateFormat("yyyy-MM-dd").format(date)
     s"https://rally1.rallydev.com/slm/webservice/v2.0/$recordType?" +
       s"query=((((Iteration.StartDate%20%3C=%20$day)%20AND%20(Iteration.EndDate%20%3E=%20$day))" +
-      s"%20AND%20(Project.Name%20contains%20%22$team%22))%20AND%20(ScheduleState%20=%20Accepted))" +
-      "&shallowFetch=FormattedId,PlanEstimate&pageSize=200"
+      s"%20AND%20(Project.Name%20contains%20%22${team.replaceAll(" ", "%20")}%22))" +
+      "%20AND%20(ScheduleState%20=%20Accepted))&shallowFetch=FormattedId,PlanEstimate&pageSize=200"
   }
 
   private val story = "HierarchicalRequirement"

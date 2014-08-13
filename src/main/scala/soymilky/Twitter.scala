@@ -2,17 +2,16 @@ package soymilky
 
 import soymilky.Config.conf
 import soymilky.rally.Story
-import twitter4j.{StatusUpdate, TwitterFactory}
+import soymilky.twitter.Farnsworth._
+import twitter4j.TwitterFactory
 import twitter4j.conf.ConfigurationBuilder
 
 object Twitter {
 
   def tweet(team: String, stories: Set[Story]): Unit = {
-    for (story <- stories) {
-      val id = story.FormattedID
-      val points = story.PlanEstimate.map(p => s" for $p points").getOrElse(", but it had no points")
-      twitter.updateStatus(s"$team delivered $id$points.")
-    }
+    val message = for (story <- stories) yield phrase(team, story)
+    message.foreach(twitter.updateStatus)
+    message.foreach(println)
   }
 
   private lazy val twitter = new TwitterFactory(config).getInstance

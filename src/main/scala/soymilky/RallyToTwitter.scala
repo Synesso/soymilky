@@ -10,7 +10,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration._
 import scala.concurrent.{Await, Future}
 
-object Farnsworth extends App {
+object RallyToTwitter extends App {
 
   type FutureStories = Future[Map[String, Set[Story]]]
 
