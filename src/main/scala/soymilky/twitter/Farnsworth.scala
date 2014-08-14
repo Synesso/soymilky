@@ -23,8 +23,8 @@ object Farnsworth {
     (team: String, story: Story) => s"${story.FormattedID}${points(story)} by Team $team. .",
     (team: String, story: Story) => s"$team tore the universe a new space hole with {story.FormattedID}${points(story)}.",
     (team: String, story: Story) => s"Very well. If cop a feel of $team's ${story.FormattedID} I must, then cop a feel I shall${points(story)}.",
-    (team: String, story: Story) => s"$team finished {story.FormattedID}${points(story)}. Yet we still exist. Choke on that, causality!",
-    (team: String, story: Story) => s"$team's skills paid the {story.FormattedID} bills${points(story)}.",
+    (team: String, story: Story) => s"$team finished ${story.FormattedID}${points(story)}. Yet we still exist. Choke on that, causality!",
+    (team: String, story: Story) => s"$team's skills paid the ${story.FormattedID} bills${points(story)}.",
     (team: String, story: Story) => s"It came to me in a dream, and I forgot it in another dream. $team built ${story.FormattedID}${points(story)}."
   )
 

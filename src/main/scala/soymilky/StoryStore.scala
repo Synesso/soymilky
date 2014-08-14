@@ -22,9 +22,16 @@ object StoryStore {
     }
   }
 
-  def store(storiesByTeam: Map[String, Set[Story]]): Unit = {
+  def store(storiesByTeam: Map[String, Set[Story]]): Future[File] = Future {
     val pw = new PrintWriter(storiesFile)
-    try { pw.write(storiesByTeam.pickle.value) } finally { pw.close() }
+    try {
+      pw.write(storiesByTeam.pickle.value)
+      storiesFile
+    } catch {
+      case e: Exception => e.printStackTrace(); throw e;
+    } finally {
+      pw.close()
+    }
   }
 
 }

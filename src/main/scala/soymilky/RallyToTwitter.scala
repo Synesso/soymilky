@@ -1,9 +1,12 @@
 package soymilky
 
+import java.io.File
+
 import soymilky.Config.conf
 import soymilky.StoryStore._
 import soymilky.Twitter._
 import soymilky.rally._
+import twitter4j.Status
 
 import scala.collection.JavaConversions._
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -34,14 +37,25 @@ object RallyToTwitter extends App {
     fromBefore <- storiesFromLastRun
   } yield all.map{ case (k, v) => (k, v -- fromBefore.getOrElse(k, Set.empty))}
 
-  for {
+  val storiesFile: Future[File] = for {
     all <- allStories
-    fresh <- newStories
-  } {
-    store(all)
-    fresh.foreach((tweet _).tupled)
+    storage <- store(all)
+  } yield storage
+
+  val statuses: Future[Map[String, Set[Status]]] = {
+    // todo - this can be simplified
+    newStories.flatMap{map =>
+      val x: Map[String, Future[Set[Status]]] = map.map{case (team, stories) =>
+        (team, tweet(team, stories))
+      }.toMap
+      Future.sequence(x.map{case (team, futureStatuses) =>
+        futureStatuses.map{set =>
+          (team, set)
+        }
+      }).map(_.toMap)
+    }
   }
 
-  Await.ready(newStories, 1 minute)
+  Await.ready(Future.sequence(Seq(storiesFile, statuses)), 1 minute)
 
 }

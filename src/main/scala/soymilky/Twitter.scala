@@ -3,15 +3,19 @@ package soymilky
 import soymilky.Config.conf
 import soymilky.rally.Story
 import soymilky.twitter.Farnsworth._
-import twitter4j.TwitterFactory
+import twitter4j.{Status, TwitterFactory}
 import twitter4j.conf.ConfigurationBuilder
+
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
 
 object Twitter {
 
-  def tweet(team: String, stories: Set[Story]): Unit = {
+  // has side effect of actually tweeting
+  def tweet(team: String, stories: Set[Story]): Future[Set[Status]] = Future {
+    println(s"Tweeting for $team: $stories")
     val message = for (story <- stories) yield phrase(team, story)
-    message.foreach(twitter.updateStatus)
-    message.foreach(println)
+    message.map(twitter.updateStatus)
   }
 
   private lazy val twitter = new TwitterFactory(config).getInstance
