@@ -43,15 +43,10 @@ object RallyToTwitter extends App {
   } yield storage
 
   val statuses: Future[Map[String, Set[Status]]] = {
-    // todo - this can be simplified
     newStories.flatMap{map =>
-      val x: Map[String, Future[Set[Status]]] = map.map{case (team, stories) =>
-        (team, tweet(team, stories))
-      }.toMap
-      Future.sequence(x.map{case (team, futureStatuses) =>
-        futureStatuses.map{set =>
-          (team, set)
-        }
+      val teamAndFutureStatuses = map.map{case (team, stories) => (team, tweet(team, stories))}
+      Future.sequence(teamAndFutureStatuses.map{case (team, futureStatuses) =>
+        futureStatuses.map{set => (team, set)}
       }).map(_.toMap)
     }
   }
