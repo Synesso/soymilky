@@ -18,7 +18,7 @@ object Farnsworth {
     (team: String, story: Story) => s"$team finished ${story.FormattedID}${points(story)}. Just in time for the early bird dinner special.",
     (team: String, story: Story) => s"$team finished ${story.FormattedID}${points(story)}. Huzzah!",
     (team: String, story: Story) => s"$team finished ${story.FormattedID}${points(story)}. At this rate, by Tuesday it will be Thursday.",
-    (team: String, story: Story) => s"$team finished ${story.FormattedID} (on the Mathematics of Quantum Neutrino Fields)${points(story)}.",
+    (team: String, story: Story) => s"$team finished ${story.FormattedID}${points(story)}. Behold, my mutant atomic supermen!",
     (team: String, story: Story) => s"$team finished ${story.FormattedID} (on the Mathematics of Quantum Neutrino Fields)${points(story)}.",
     (team: String, story: Story) => s"$team's ${story.FormattedID} appears to be no more than a piece of paper smeared with faeces.",
     (team: String, story: Story) => s"${story.FormattedID}${points(story)} by Team $team. This will help me with my wandering bladder.",
