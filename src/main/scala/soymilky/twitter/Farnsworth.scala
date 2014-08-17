@@ -19,6 +19,7 @@ object Farnsworth {
     (team: String, story: Story) => s"$team finished ${story.FormattedID}${points(story)}. Huzzah!",
     (team: String, story: Story) => s"$team finished ${story.FormattedID}${points(story)}. At this rate, by Tuesday it will be Thursday.",
     (team: String, story: Story) => s"$team finished ${story.FormattedID}${points(story)}. Behold, my mutant atomic supermen!",
+    (team: String, story: Story) => s"$team finished ${story.FormattedID}. Dear Lord! That's good${points(story, s" for almost $randFloat points")}.",
     (team: String, story: Story) => s"$team finished ${story.FormattedID} (on the Mathematics of Quantum Neutrino Fields)${points(story)}.",
     (team: String, story: Story) => s"$team's ${story.FormattedID} appears to be no more than a piece of paper smeared with faeces.",
     (team: String, story: Story) => s"${story.FormattedID}${points(story)} by Team $team. This will help me with my wandering bladder.",
@@ -34,8 +35,10 @@ object Farnsworth {
     (team: String, story: Story) => s"It came to me in a dream, and I forgot it in another dream. $team built ${story.FormattedID}${points(story)}."
   )
 
-  private def points(story: Story) = story.PlanEstimate
+  private def points(story: Story, ifZero: String = ", although it had no points") = story.PlanEstimate
     .map(p => s" for $p point${if (p==1) "" else "s"}")
-    .getOrElse(", although it had no points")
+    .getOrElse(ifZero)
+
+  private def randFloat = String.valueOf(r.nextFloat()).substring(0, 5)
 
 }
