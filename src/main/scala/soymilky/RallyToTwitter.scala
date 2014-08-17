@@ -51,6 +51,8 @@ object RallyToTwitter extends App {
     }
   }
 
-  Await.ready(Future.sequence(Seq(storiesFile, statuses)), 1 minute)
+  val finalValue = Future.sequence(Seq(storiesFile, statuses))
+  finalValue.onFailure{case t: Throwable => throw t}
+  Await.ready(finalValue, 1 minute)
 
 }

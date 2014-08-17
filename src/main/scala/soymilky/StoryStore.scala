@@ -18,6 +18,7 @@ object StoryStore {
     if (storiesFile.createNewFile()) Map.empty
     else {
       try { Source.fromFile(storiesFile).mkString.unpickle[Map[String, Set[Story]]] }
+      // todo - this should simply fail the future after printing that the .stories file is dodgy
       catch { case e: PicklingException => Map.empty }
     }
   }

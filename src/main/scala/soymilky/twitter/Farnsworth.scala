@@ -23,14 +23,19 @@ object Farnsworth {
     (team: String, story: Story) => s"$team's ${story.FormattedID} appears to be no more than a piece of paper smeared with faeces.",
     (team: String, story: Story) => s"${story.FormattedID}${points(story)} by Team $team. This will help me with my wandering bladder.",
     (team: String, story: Story) => s"${story.FormattedID}${points(story)} by Team $team. It's a little experiment that might win me the Nobel Prize.",
-    (team: String, story: Story) => s"$team tore the universe a new space hole with {story.FormattedID}${points(story)}.",
+    (team: String, story: Story) => s"$team tore the universe a new space hole with ${story.FormattedID}${points(story)}.",
     (team: String, story: Story) => s"Very well. If cop a feel of $team's ${story.FormattedID} I must, then cop a feel I shall${points(story)}.",
     (team: String, story: Story) => s"$team finished ${story.FormattedID}${points(story)}. Yet we still exist. Choke on that, causality!",
     (team: String, story: Story) => s"$team's skills paid the ${story.FormattedID} bills${points(story)}.",
+    (team: String, story: Story) => s"$team's ${story.FormattedID} has left me sticky and naked${points(story)}.",
+    (team: String, story: Story) => s"Well, this is uncomfortable and humiliating. $team pushed ${story.FormattedID}${points(story)}.",
+    (team: String, story: Story) => s"$team, say farewell to ${story.FormattedID} before I jettison it into deep space${points(story)}.",
+    (team: String, story: Story) => s"Hmm, ${story.FormattedID} seems larger than normal${points(story)}. Nice job $team",
     (team: String, story: Story) => s"It came to me in a dream, and I forgot it in another dream. $team built ${story.FormattedID}${points(story)}."
   )
 
-  private def points(story: Story) = story.PlanEstimate.map(p => s" for $p point${if (p==1) "" else "s"}")
+  private def points(story: Story) = story.PlanEstimate
+    .map(p => s" for $p point${if (p==1) "" else "s"}")
     .getOrElse(", although it had no points")
 
 }
