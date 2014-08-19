@@ -32,7 +32,11 @@ object Farnsworth {
     (team: String, story: Story) => s"Well, this is uncomfortable and humiliating. $team pushed ${story.FormattedID}${points(story)}.",
     (team: String, story: Story) => s"$team, say farewell to ${story.FormattedID} before I jettison it into deep space${points(story)}.",
     (team: String, story: Story) => s"Hmm, ${story.FormattedID} seems larger than normal${points(story)}. Nice job $team",
-    (team: String, story: Story) => s"It came to me in a dream, and I forgot it in another dream. $team built ${story.FormattedID}${points(story)}."
+    (team: String, story: Story) => s"It came to me in a dream, and I forgot it in another dream. $team built ${story.FormattedID}${points(story)}.",
+    (team: String, story: Story) => s"The thought of caressing $team makes the tapioca rise in my gullet. ${story.FormattedID}${points(story)}.",
+    (team: String, story: Story) => s"Holy Zombie Jesus! $team just put ${story.FormattedID} to bed${points(story)}.",
+    (team: String, story: Story) => s"Everyone, I have a dramatic announcement. We did all we could, but $team ended up killing ${story.FormattedID}${points(story)}.",
+    (team: String, story: Story) => s"Pine trees have been extinct for 800 years, $team. Gone the way of the poodle and ${story.FormattedID}${points(story)}."
   )
 
   private def points(story: Story, ifZero: String = ", although it had no points") = story.PlanEstimate
