@@ -13,4 +13,6 @@ twitter {
         secret = "your access secret"
     }
 }
+
+# optional - defaults to all unreported stories
 batch.size = 1

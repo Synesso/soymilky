@@ -15,6 +15,7 @@ libraryDependencies ++= Seq(
 
 initialCommands in console := """
   import soymilky._
+  import soymilky.Configuration._
   import twitter4j._
 """
 

@@ -1,6 +1,6 @@
 package soymilky
 
-import soymilky.Config.conf
+import soymilky.Configuration.conf
 import soymilky.rally.Story
 import soymilky.twitter.Farnsworth._
 import twitter4j.{Status, TwitterFactory}
@@ -13,7 +13,6 @@ object Twitter {
 
   // has side effect of actually tweeting
   def tweet(team: String, stories: Set[Story]): Future[Set[Status]] = Future {
-    println(s"Tweeting for $team: $stories")
     val message = for (story <- stories) yield phrase(team, story)
     message.map(twitter.updateStatus)
   }

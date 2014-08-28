@@ -2,7 +2,7 @@ package soymilky
 
 import java.io.File
 
-import soymilky.Config.conf
+import soymilky.Configuration._
 import soymilky.StoryStore._
 import soymilky.Twitter._
 import soymilky.rally._
@@ -12,6 +12,8 @@ import scala.collection.JavaConversions._
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration._
 import scala.concurrent.{Await, Future}
+import scala.util.{Success, Failure}
+import scala.language.postfixOps
 
 object RallyToTwitter extends App {
 
@@ -37,18 +39,27 @@ object RallyToTwitter extends App {
     fromBefore <- storiesFromLastRun
   } yield all.map{ case (k, v) => (k, v -- fromBefore.getOrElse(k, Set.empty))}
 
-  // if batch size is defined, we want the first n of newStories only
-  val storiesToProcess: FutureStories = ??? // conf.getOptionalInt("batch.size").map()
+  // if batch size is defined as n, we want the first n of newStories only, otherwise the entire thing
+  val storiesToProcess: FutureStories = conf.getOptionalInt("batch.size").map{size: Int =>
+    newStories.map{teamsToStories: Map[String, Set[Story]] =>
+      teamsToStories.foldLeft((size, Map.empty[String, Set[Story]])) { case ((remaining, map), (team, stories)) =>
+        val taking: Int = math.min(remaining, stories.size)
+        (remaining - taking, map + (team -> stories.take(taking)))
+      }._2
+    }
+  }.getOrElse(newStories)
 
-  // we don't store all stories, but a union of storiesToProcess and storiesFromLastRun
+  // save to storage the union of storiesToProcess and storiesFromLastRun
   val storiesFile: Future[File] = for {
     fromBefore <- storiesFromLastRun
     processedNow <- storiesToProcess
-    storage <- store(fromBefore ++ processedNow)
+    storage <- store(fromBefore.map{case (k,v) => (k, v ++ processedNow.getOrElse(k, Set.empty))} ++
+      processedNow.filterKeys(!fromBefore.contains(_)))
   } yield storage
 
+  // tweet all of the storiesToProcess and collect the statuses
   val statuses: Future[Map[String, Set[Status]]] = {
-    newStories.flatMap{map =>
+    storiesToProcess.flatMap{map =>
       val teamAndFutureStatuses = map.map{case (team, stories) => (team, tweet(team, stories))}
       Future.sequence(teamAndFutureStatuses.map{case (team, futureStatuses) =>
         futureStatuses.map{set => (team, set)}
@@ -57,6 +68,7 @@ object RallyToTwitter extends App {
   }
 
   val finalValue = Future.sequence(Seq(storiesFile, statuses))
+  statuses.onSuccess{case map => map.foreach{case (team, status) => status.map(_.getText).foreach(println)}}
   finalValue.onFailure{case t: Throwable => throw t}
   Await.ready(finalValue, 1 minute)
 

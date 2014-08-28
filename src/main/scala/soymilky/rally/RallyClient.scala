@@ -7,7 +7,7 @@ import dispatch.Defaults._
 import dispatch._
 import org.json4s._
 import org.json4s.jackson.JsonMethods._
-import soymilky.Config.conf
+import soymilky.Configuration.conf
 
 class RallyClient {
 
