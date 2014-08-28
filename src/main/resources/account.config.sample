@@ -13,3 +13,4 @@ twitter {
         secret = "your access secret"
     }
 }
+batch.size = 1

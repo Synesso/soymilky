@@ -37,9 +37,14 @@ object RallyToTwitter extends App {
     fromBefore <- storiesFromLastRun
   } yield all.map{ case (k, v) => (k, v -- fromBefore.getOrElse(k, Set.empty))}
 
+  // if batch size is defined, we want the first n of newStories only
+  val storiesToProcess: FutureStories = ??? // conf.getOptionalInt("batch.size").map()
+
+  // we don't store all stories, but a union of storiesToProcess and storiesFromLastRun
   val storiesFile: Future[File] = for {
-    all <- allStories
-    storage <- store(all)
+    fromBefore <- storiesFromLastRun
+    processedNow <- storiesToProcess
+    storage <- store(fromBefore ++ processedNow)
   } yield storage
 
   val statuses: Future[Map[String, Set[Status]]] = {
