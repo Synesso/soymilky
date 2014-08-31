@@ -1,13 +1,39 @@
-package soymilky.twitter
+package soymilky
 
 import soymilky.rally.Story
-import scala.util.{Random => r}
 
-object Farnsworth {
+import scala.util.{Random => r, Try}
 
-  def phrase(team: String, story: Story) = phrases(r.nextInt(phrases.size))(team, story)
+object Utterances {
 
-  private val phrases: Array[(String, Story) => String] = Array(
+  def phrase(team: String, story: Story) = {
+
+    val dictionary: Map[String, String] = Map(
+      "team" -> team,
+      "id" -> story.FormattedID,
+      "pointsOrNothing" -> story.PlanEstimate.map(_.toString).getOrElse(""),
+      "pointsOrZero" -> story.PlanEstimate.map(_.toString).getOrElse("0"),
+      "pointsOrAlthough" -> points(story)
+    )
+
+    resolveTokens(phrases(r.nextInt(phrases.size)), dictionary)
+  }
+
+  def resolveTokens(phrase: String, dict: Map[String, String]): Try[String] = {
+    val tokens = tokenRegex.findAllMatchIn(phrase).toSeq
+    val replacements = tokens.map(_.toString()) zip tokens.map(_.group(1))
+    Try(replacements.foldLeft(phrase){case (acc, (_, after)) =>
+      acc.replaceFirst("""\$\{""" + after + """\}""", dict(after))
+    })
+  }
+
+  private val tokenRegex = """\$\{(.*?)\}""".r
+
+  private val phrases: Array[String] = Array(
+    "In the end, this will ${team} from a file"
+  )
+
+  private val phrases_old: Array[(String, Story) => String] = Array(
     (team: String, story: Story) => s"Good news, everybody! Team $team just delivered ${story.FormattedID}${points(story)}.",
     (team: String, story: Story) => s"$team just finished ${story.FormattedID}${points(story)}. This will allow my starship to travel between galaxies in mere hours!",
     (team: String, story: Story) => s"Today is a special day, and I want you all to be alive. Team $team finished ${story.FormattedID}${points(story)}.",
@@ -36,6 +62,7 @@ object Farnsworth {
     (team: String, story: Story) => s"The thought of caressing $team makes the tapioca rise in my gullet. ${story.FormattedID}${points(story)}.",
     (team: String, story: Story) => s"Holy Zombie Jesus! $team just put ${story.FormattedID} to bed${points(story)}.",
     (team: String, story: Story) => s"Everyone, I have a dramatic announcement. We did all we could, but $team ended up killing ${story.FormattedID}${points(story)}.",
+    (team: String, story: Story) => s"Ah, fine powdered $team's ${story.FormattedID} sprinkles directly into the trunks soothes the fire.",
     (team: String, story: Story) => s"Pine trees have been extinct for 800 years, $team. Gone the way of the poodle and ${story.FormattedID}${points(story)}."
   )
 

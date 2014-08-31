@@ -39,6 +39,10 @@ object RallyToTwitter extends App {
     fromBefore <- storiesFromLastRun
   } yield all.map{ case (k, v) => (k, v -- fromBefore.getOrElse(k, Set.empty))}
 
+  newStories.onSuccess{case m: Map[String, Set[Story]] =>
+    println(s"New stories found: ${m.values.map(_.size).reduceLeft(_+_)}")
+  }
+
   // if batch size is defined as n, we want the first n of newStories only, otherwise the entire thing
   val storiesToProcess: FutureStories = conf.getOptionalInt("batch.size").map{size: Int =>
     newStories.map{teamsToStories: Map[String, Set[Story]] =>
@@ -48,6 +52,10 @@ object RallyToTwitter extends App {
       }._2
     }
   }.getOrElse(newStories)
+
+  storiesToProcess.onSuccess{case m: Map[String, Set[Story]] =>
+    println(s"Stories to be tweeted: ${m.values.map(_.size).reduceLeft(_+_)}")
+  }
 
   // save to storage the union of storiesToProcess and storiesFromLastRun
   val storiesFile: Future[File] = for {
