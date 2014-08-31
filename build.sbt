@@ -4,6 +4,8 @@ version := "0.1.0"
 
 scalaVersion := "2.10.4"
 
+scalacOptions ++= Seq("-feature", "-language:implicitConversions")
+
 libraryDependencies ++= Seq(
   "com.typesafe" % "config" % "1.2.1",
   "net.databinder.dispatch" %% "dispatch-core" % "0.11.1",

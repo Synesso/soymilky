@@ -12,7 +12,6 @@ import scala.collection.JavaConversions._
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration._
 import scala.concurrent.{Await, Future}
-import scala.util.{Success, Failure}
 import scala.language.postfixOps
 
 object RallyToTwitter extends App {
