@@ -19,8 +19,9 @@ object Utterances {
 
     implicit val dictionary: Map[String, String] = Map(
       "team" -> team,
+      "team's" -> (if (team.endsWith("s")) s"$team'" else s"$team's"),
       "id" -> story.FormattedID,
-      "pointsOrZero" -> story.PlanEstimate.map(_.toString).getOrElse("0"),
+      "points" -> story.PlanEstimate.map(_.toString).getOrElse("0"),
       "forPoints" -> points(story)
     )
 
