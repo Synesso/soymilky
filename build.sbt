@@ -1,3 +1,6 @@
+import com.typesafe.sbt.SbtNativePackager._
+import NativePackagerKeys._
+
 name := "soymilky"
 
 version := "0.1.0"
@@ -22,3 +25,9 @@ initialCommands in console := """
   import twitter4j._
 """
 
+// Get the SBT Native Packager to build us a start script
+// so we don't need SBT on our target box:
+packageArchetype.java_application
+
+// Include the path to a local ../conf directory so account.config can be sourced: 
+scriptClasspath += "../conf"
