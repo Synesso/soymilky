@@ -25,3 +25,9 @@ initialCommands in console := """
   import twitter4j._
 """
 
+// Get the SBT Native Packager to build us a start script
+// so we don't need SBT on our target box:
+packageArchetype.java_application
+
+// Include the path to account.config in the bash start script:
+
