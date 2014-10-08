@@ -29,5 +29,5 @@ initialCommands in console := """
 // so we don't need SBT on our target box:
 packageArchetype.java_application
 
-// Include the path to account.config in the bash start script:
-
+// Include the path to a local ../conf directory so account.config can be sourced: 
+scriptClasspath += "../conf"
